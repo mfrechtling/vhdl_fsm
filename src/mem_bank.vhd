@@ -3,14 +3,14 @@ use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
 entity mem_bank is
-	port(	clk			:	in std_logic;
-			reset		:	in std_logic;
-			wr_en		:	in std_logic;
-			rd_en		:	in std_logic;
-			rd_ack		:	out std_logic;
-			addr		:	in std_logic_vector(15 downto 0);
-			wr_data		:	in std_logic_vector(31 downto 0);
-			rd_data		:	out std_logic_vector(31 downto 0));
+	port(clk		:	in std_logic;
+		reset		:	in std_logic;
+		wr_en		:	in std_logic;
+		rd_en		:	in std_logic;
+		rd_ack		:	out std_logic;
+		addr		:	in std_logic_vector(15 downto 0);
+		wr_data		:	in std_logic_vector(31 downto 0);
+		rd_data		:	out std_logic_vector(31 downto 0));
 end entity;
 
 architecture rtl of mem_bank is
@@ -33,12 +33,12 @@ architecture rtl of mem_bank is
 begin
 
 	with addr select 
-		true_addr <= 	x"0000" when x"0000",
-						x"0001" when x"0001",
-						x"0002" when x"0002",
-						x"0003" when x"0003",
-						x"0004" when x"00e7",
-						x"8000" when others;
+		true_addr <= x"0000" when x"0000",
+			x"0001" when x"0001",
+			x"0002" when x"0002",
+			x"0003" when x"0003",
+			x"0004" when x"00e7",
+			x"8000" when others;
 
 	addr_valid <= not true_addr(15);
 

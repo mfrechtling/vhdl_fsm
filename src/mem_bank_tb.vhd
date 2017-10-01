@@ -6,14 +6,14 @@ end entity;
 
 architecture test_bench of mem_bank_tb is
 	component mem_bank is
-		port(	clk			:	in std_logic;
-				reset		:	in std_logic;
-				wr_en		:	in std_logic;
-				rd_en		:	in std_logic;
-				rd_ack		:	out std_logic;
-				addr		:	in std_logic_vector(15 downto 0);
-				wr_data		:	in std_logic_vector(31 downto 0);
-				rd_data		:	out std_logic_vector(31 downto 0));
+		port(clk		:	in std_logic;
+			reset		:	in std_logic;
+			wr_en		:	in std_logic;
+			rd_en		:	in std_logic;
+			rd_ack		:	out std_logic;
+			addr		:	in std_logic_vector(15 downto 0);
+			wr_data		:	in std_logic_vector(31 downto 0);
+			rd_data		:	out std_logic_vector(31 downto 0));
 	end component;
 
 	signal tb_clk		:	std_logic := '0';
@@ -29,14 +29,14 @@ begin
 
 	tb_clk <= not tb_clk after 10 ns;
 
-	mem_bank_0:	mem_bank port map(	clk => tb_clk,
-									reset => tb_reset,
-									wr_en => tb_wr_en,
-									rd_en => tb_rd_en,
-									rd_ack => tb_rd_ack,
-									addr => tb_addr,
-									wr_data => tb_wr_data,
-									rd_data => tb_rd_data);
+	mem_bank_0:	mem_bank port map(clk => tb_clk,
+							reset => tb_reset,
+							wr_en => tb_wr_en,
+							rd_en => tb_rd_en,
+							rd_ack => tb_rd_ack,
+							addr => tb_addr,
+							wr_data => tb_wr_data,
+							rd_data => tb_rd_data);
 
 	process
 		type pattern_type is record
@@ -52,27 +52,27 @@ begin
 		end record;
 		type pattern_array is array (natural range <>) of pattern_type;
 		constant patterns	:	pattern_array :=
-			(	('0', '1', '0', x"0000", x"aaaaaaaa", '0', x"00000000"),
-				('0', '1', '0', x"0001", x"bbbbbbbb", '0', x"00000000"),
-				('0', '1', '0', x"0002", x"cccccccc", '0', x"00000000"),
-				('0', '1', '0', x"0003", x"dddddddd", '0', x"00000000"),
-				('0', '1', '0', x"00e7", x"eeeeeeee", '0', x"00000000"),
-				('0', '0', '0', x"0000", x"00000000", '0', x"00000000"),
-				('0', '0', '1', x"0000", x"00000000", '0', x"00000000"),
-				('0', '0', '1', x"0001", x"00000000", '1', x"aaaaaaaa"),
-				('0', '0', '1', x"0002", x"00000000", '1', x"bbbbbbbb"),
-				('0', '0', '1', x"0003", x"00000000", '1', x"cccccccc"),
-				('0', '0', '1', x"00e7", x"00000000", '1', x"dddddddd"),
-				('0', '0', '0', x"0000", x"00000000", '1', x"eeeeeeee"),
-				('0', '0', '0', x"0000", x"00000000", '0', x"00000000"),
-				('1', '0', '0', x"0000", x"00000000", '0', x"00000000"),
-				('0', '0', '1', x"0000", x"00000000", '0', x"00000000"),
-				('0', '0', '1', x"0001", x"00000000", '1', x"01234567"),
-				('0', '0', '1', x"0002", x"00000000", '1', x"89abcde7"),
-				('0', '0', '1', x"0003", x"00000000", '1', x"0a0b0c0d"),
-				('0', '0', '1', x"00e7", x"00000000", '1', x"10203040"),
-				('0', '0', '0', x"0000", x"00000000", '1', x"deadbeef"),
-				('0', '0', '0', x"0000", x"00000000", '0', x"00000000"));
+			(('0', '1', '0', x"0000", x"aaaaaaaa", '0', x"00000000"),
+			('0', '1', '0', x"0001", x"bbbbbbbb", '0', x"00000000"),
+			('0', '1', '0', x"0002", x"cccccccc", '0', x"00000000"),
+			('0', '1', '0', x"0003", x"dddddddd", '0', x"00000000"),
+			('0', '1', '0', x"00e7", x"eeeeeeee", '0', x"00000000"),
+			('0', '0', '0', x"0000", x"00000000", '0', x"00000000"),
+			('0', '0', '1', x"0000", x"00000000", '0', x"00000000"),
+			('0', '0', '1', x"0001", x"00000000", '1', x"aaaaaaaa"),
+			('0', '0', '1', x"0002", x"00000000", '1', x"bbbbbbbb"),
+			('0', '0', '1', x"0003", x"00000000", '1', x"cccccccc"),
+			('0', '0', '1', x"00e7", x"00000000", '1', x"dddddddd"),
+			('0', '0', '0', x"0000", x"00000000", '1', x"eeeeeeee"),
+			('0', '0', '0', x"0000", x"00000000", '0', x"00000000"),
+			('1', '0', '0', x"0000", x"00000000", '0', x"00000000"),
+			('0', '0', '1', x"0000", x"00000000", '0', x"00000000"),
+			('0', '0', '1', x"0001", x"00000000", '1', x"01234567"),
+			('0', '0', '1', x"0002", x"00000000", '1', x"89abcde7"),
+			('0', '0', '1', x"0003", x"00000000", '1', x"0a0b0c0d"),
+			('0', '0', '1', x"00e7", x"00000000", '1', x"10203040"),
+			('0', '0', '0', x"0000", x"00000000", '1', x"deadbeef"),
+			('0', '0', '0', x"0000", x"00000000", '0', x"00000000"));
 	begin
 		assert false report "Start of test." severity note;
 		for i in patterns'range loop
