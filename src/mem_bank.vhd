@@ -1,14 +1,15 @@
 library ieee;
 use ieee.std_logic_1164.all;
+use ieee.numeric_std.all;
 
 entity mem_bank is
-	port(	clk			:	in std_logic,
-			res			:	in std_logic,
-			wr_en		:	in std_logic,
-			rd_en		:	in std_logic,
-			rd_ack		:	out std_logic,
-			addr 		:	in std_logic_vector(15 downto 0),
-			wr_data		:	in std_logic_vector(31 downto 0),
+	port(	clk			:	in std_logic;
+			reset		:	in std_logic;
+			wr_en		:	in std_logic;
+			rd_en		:	in std_logic;
+			rd_ack		:	out std_logic;
+			addr		:	in std_logic_vector(15 downto 0);
+			wr_data		:	in std_logic_vector(31 downto 0);
 			rd_data		:	out std_logic_vector(31 downto 0));
 end entity;
 
@@ -44,17 +45,20 @@ begin
 	process (clk)
 	begin
 		if (rising_edge(clk)) then
-			if (rst = '1') then
+			if (reset = '1') then
 				rd_ack <= '0';
 				rd_data <= (others => '0');
 				mem_bank <=	init_reg_array;
-			elsif (wr_en = '1' and addr_valid) then
+			elsif (wr_en = '1' and addr_valid = '1') then
 				rd_ack <= '0';
 				rd_data <= (others => '0');
-				mem_bank(unsigned(true_addr)) <= wr_data;
-			elsif (rd_en = '1' and addr_valid) then
-				rd_data <= mem_bank(unsigned(true_addr));
+				mem_bank(to_integer(unsigned(true_addr))) <= wr_data;
+			elsif (rd_en = '1' and addr_valid = '1') then
 				rd_ack <= '1';
+				rd_data <= mem_bank(to_integer(unsigned(true_addr)));
+			else 
+				rd_ack	<= '0';
+				rd_data	<= (others => '0');
 			end if;
 		end if;
 	end process;
