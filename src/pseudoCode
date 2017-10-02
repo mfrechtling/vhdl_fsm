@@ -1,0 +1,145 @@
+//GLOBAL FSM:
+
+while (1)
+	wait for clock
+	if (data_in_vld and data_in == x"e7")
+		PREV_STATE = FSM_STATE
+		FSM_STATE = CMD
+	else if (FSM_STATE == CMD)
+		if (data_in_vld and data_in == x"13")
+			FSM_STATE = READ;
+		else if (data_in_vld and data_in == x"23")
+			FSM_STATE = WR
+		else if (data_in_vld and data_in == "x55")
+			FSM_STATE = IDLE
+		else if (data_in_vld and data_in == x"e7")
+			FSM_STATE = PREV_STATE
+		end
+	else if (READ_STATE = BREAK)
+			PREV_STATE = FSM_STATE
+			FSM_STATE = BREAK
+	else if (WRITE_STATE = WRITE_DATA or READ_STATE = RSP_0 or BREAK_STATE = RSP_CMD)
+		PREV_STATE = FSM_STATE
+		FSM_STATE = IDLE
+	else
+		PREV_STATE = FSM_STATE
+	end
+end
+
+//READ FSM:
+while (1)
+	wait for clock
+	if (FSM_STATE != READ) continue;
+	if (READ_IDLE and data_in_vld)
+		addr = data_in << 24;
+		READ_STATE = READ_ADDR_2
+	else if (READ_ADDR_2 and data_in_vld)
+		addr = addr & data_in << 16
+		READ_STATE = READ_ADDR_1
+	else if (READ_ADDR_1 and data_in_vld)
+		addr = addr & data_in << 8
+		READ_STATE = READ_ADDR_0
+	else if (READ_ADDR_0 and data_in_vld)
+		addr = addr & data_in;
+		READ_STATE = WAIT_RD
+	else if (WAIT_RD)
+		rd_en = 1
+		if (rd_ack)
+			data_reg = read_in;
+			rd_cntr = 0
+		else if (rd_cntr == 3)
+			READ_STATE = BREAK
+		else
+			rd_cntr++
+		end
+	else if (RSP_SPC)
+		data_out_vld = '1'
+		data_out = x"e7"
+		READ_STATE = RSP_CMD
+	else if (RSP_CMD)
+		data_out_vld = '1'
+		data_out = x"03"
+		READ_STATE = RSP_3
+	else if (RSP_3)
+		data_out_vld = '1'
+		data_out = data_reg(31:24)
+		READ_STATE = RSP_2
+	else if (RSP_2)
+		data_out_vld = '1'
+		data_out = data_reg(23:16)
+		READ_STATE = RSP_1
+	else if (RSP_1)
+		data_out_vld = '1'
+		data_out = data_reg(15:8)
+		READ_STATE = RSP_2
+	else if (RSP_0)
+		data_out_vld = '1'
+		data_out = data_reg(7:0)
+		READ_STATE = IDLE
+	else
+		READ_STATE = IDLE
+	end
+end
+
+//WRITE FSM
+while (1)
+	wait for clock
+	if (FSM_STATE != WRITE) continue
+	if (WRITE_IDLE and data_in_vld)
+		addr = data_in << 24
+		WRITE_STATE = WRITE_ADDR_2
+	else if (WRITE_ADDR_2 and data_in_vld)
+		addr = addr & data_in << 16
+		WRITE_STATE = WRITE_ADDR_1
+	else if (WRITE_ADDR_1 and data_in_vld)
+		addr = addr & data_in << 8
+		WRITE_STATE = WRITE_ADDR_0
+	else if (WRITE_ADDR_0 and data_in_vld)
+		addr = addr & data_in
+		WRITE_STATE = WRITE_DATA_3
+	else if (WRITE_DATA_3 and data_in_vld)
+		data = data_in << 24
+		WRITE_STATE = WRITE_DATA_2
+	else if (WRITE_DATA_2 and data_in_vld)
+		data = data_in << 16 and data
+		WRITE_STATE = WRITE_DATA_1
+	else if (WRITE_DATA_1 and data_in_vld)
+		data = data_in << 8 and data
+		WRITE_STATE = WRITE_DATA_0
+	else if (WRITE_DATA_0 and data_in_vld)
+		data = data_in and data
+		WRITE_STATE = WRITE_DATA
+	else if (WRITE_DATA)
+		wr_en = 1
+		wr_data = data
+		WRITE_STATE = IDLE
+	end
+end
+
+//BREAK FSM
+while (1)
+	wait for clock
+	if (FSM_STATE != BREAK) continue
+	if (RSP_SPC)
+		data_out_vld = 1
+		data_out = x"e7"
+		BREAK_STATE = RSP_CMD
+	else if (RSP_CMD)
+		data_out_vld = 1
+		data_out = x"55"
+		BREAK_STATE = IDLE
+	end
+end
+
+
+
+
+
+
+
+
+		
+		
+		
+		
+
