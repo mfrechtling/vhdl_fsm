@@ -6,24 +6,24 @@ end entity;
 
 architecture test_bench of mem_bank_tb is
 	component mem_bank is
-		port(clk		:	in std_logic;
-			reset		:	in std_logic;
-			wr_en		:	in std_logic;
-			rd_en		:	in std_logic;
-			rd_ack		:	out std_logic;
-			addr		:	in std_logic_vector(15 downto 0);
-			wr_data		:	in std_logic_vector(31 downto 0);
-			rd_data		:	out std_logic_vector(31 downto 0));
+		port(clk		: in std_logic;
+			reset		: in std_logic;
+			wr_en		: in std_logic;
+			rd_en		: in std_logic;
+			rd_ack		: out std_logic;
+			addr		: in std_logic_vector(15 downto 0);
+			wr_data		: in std_logic_vector(31 downto 0);
+			rd_data		: out std_logic_vector(31 downto 0));
 	end component;
 
-	signal tb_clk		:	std_logic := '0';
-	signal tb_reset		:	std_logic := '0';		
-	signal tb_wr_en		:	std_logic := '0';
-	signal tb_rd_en		:	std_logic := '0';
-	signal tb_rd_ack	:	std_logic := '0';
-	signal tb_addr		:	std_logic_vector(15 downto 0) := (others => '0');
-	signal tb_wr_data	:	std_logic_vector(31 downto 0) := (others => '0');
-	signal tb_rd_data	:	std_logic_vector(31 downto 0) := (others => '0');
+	signal tb_clk		: std_logic := '0';
+	signal tb_reset		: std_logic := '0';		
+	signal tb_wr_en		: std_logic := '0';
+	signal tb_rd_en		: std_logic := '0';
+	signal tb_rd_ack	: std_logic := '0';
+	signal tb_addr		: std_logic_vector(15 downto 0) := (others => '0');
+	signal tb_wr_data	: std_logic_vector(31 downto 0) := (others => '0');
+	signal tb_rd_data	: std_logic_vector(31 downto 0) := (others => '0');
 
 begin
 
@@ -41,17 +41,17 @@ begin
 	process
 		type pattern_type is record
 			--inputs
-			reset	:	std_logic;
-			wr_en	:	std_logic;
-			rd_en	:	std_logic;
-			addr	:	std_logic_vector(15 downto 0);
-			wr_data	:	std_logic_vector(31 downto 0);
+			reset	: std_logic;
+			wr_en	: std_logic;
+			rd_en	: std_logic;
+			addr	: std_logic_vector(15 downto 0);
+			wr_data	: std_logic_vector(31 downto 0);
 			--outputs
-			rd_ack	:	std_logic;
-			rd_data	:	std_logic_vector(31 downto 0);
+			rd_ack	: std_logic;
+			rd_data	: std_logic_vector(31 downto 0);
 		end record;
 		type pattern_array is array (natural range <>) of pattern_type;
-		constant patterns	:	pattern_array :=
+		constant patterns	: pattern_array :=
 			(('0', '1', '0', x"0000", x"aaaaaaaa", '0', x"00000000"),
 			('0', '1', '0', x"0001", x"bbbbbbbb", '0', x"00000000"),
 			('0', '1', '0', x"0002", x"cccccccc", '0', x"00000000"),

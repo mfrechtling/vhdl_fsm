@@ -3,14 +3,14 @@ use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
 entity mem_bank is
-	port(clk		:	in std_logic;
-		reset		:	in std_logic;
-		wr_en		:	in std_logic;
-		rd_en		:	in std_logic;
-		rd_ack		:	out std_logic;
-		addr		:	in std_logic_vector(15 downto 0);
-		wr_data		:	in std_logic_vector(31 downto 0);
-		rd_data		:	out std_logic_vector(31 downto 0));
+	port(clk		: in std_logic;
+		reset		: in std_logic;
+		wr_en		: in std_logic;
+		rd_en		: in std_logic;
+		rd_ack		: out std_logic;
+		addr		: in std_logic_vector(15 downto 0);
+		wr_data		: in std_logic_vector(31 downto 0);
+		rd_data		: out std_logic_vector(31 downto 0));
 end entity;
 
 architecture rtl of mem_bank is
@@ -19,17 +19,17 @@ architecture rtl of mem_bank is
 	function init_reg_array return reg_array is
 		variable result	:	reg_array;
 	begin
-		result(0)	:=	x"01234567";
-		result(1)	:=	x"89abcde7";
-		result(2)	:=	x"0a0b0c0d";
-		result(3)	:=	x"10203040";
-		result(4)	:=	x"deadbeef";
+		result(0)	:= x"01234567";
+		result(1)	:= x"89abcde7";
+		result(2)	:= x"0a0b0c0d";
+		result(3)	:= x"10203040";
+		result(4)	:= x"deadbeef";
 		return result;
 	end init_reg_array;
 
-	signal mem_bank		:	reg_array := init_reg_array;
-	signal true_addr	:	std_logic_vector(15 downto 0);
-	signal addr_valid	:	std_logic;
+	signal mem_bank		: reg_array := init_reg_array;
+	signal true_addr	: std_logic_vector(15 downto 0);
+	signal addr_valid	: std_logic;
 begin
 
 	with addr select 
